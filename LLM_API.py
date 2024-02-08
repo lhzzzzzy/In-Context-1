@@ -26,5 +26,7 @@ class LLMApi:
         model_inputs = self.tokenizer(prompts, return_tensors="pt")
         generated_ids = self.model.generate(** model_inputs, generation_config = self.generation_config)
         output = self.tokenizer.batch_decode(generated_ids,skip_special_tokens=True)
+        for i in range(len(output)): # only return real outputs
+            output[i] = output[i][len(prompts[i]):]
         return output
 
