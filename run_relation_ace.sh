@@ -1,7 +1,7 @@
-python3 gpt3_relation.py \
+python3 relation_extraction.py \
     --task ace05 \
     --model text-davinci-003 \
-    --num_test 2442 \
+    --num_test 1 \
     --example_dataset "./dataset/ace05/train.json" \
     --test_dataset "./dataset/ace05/test.json" \
     --fixed_example 0\

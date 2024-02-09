@@ -563,8 +563,6 @@ def run(reltoid, idtoprompt, store_path, args):
         preds = []
         num = 0
         whole_knn = []
-        whole_prob = []
-        whole_prob_on_rel = []
         azure_error = []
         for tmp_dict in test_examples:
             tmp_knn = []
@@ -597,7 +595,7 @@ def run(reltoid, idtoprompt, store_path, args):
                 azure_error.append(tmp_dict["doc_key"])
             if args.discriminator and pred != 0:
                 ori_pred = pred
-                pred, prob = get_binary_select(pred, tmp_dict, llm, knn_list, reltoid, idtoprompt, args)
+                pred = get_binary_select(pred, tmp_dict, llm, knn_list, reltoid, idtoprompt, args)
                 if pred != ori_pred:
                     print("work!")
 
@@ -610,7 +608,7 @@ def run(reltoid, idtoprompt, store_path, args):
             
             if preds[-1] != labels[-1]:
                 
-                with open("{}/negtive.txt".format(store_path), "a") as negf:
+                with open("{}/negtive.txt".format(store_path), "w") as negf:
                     negf.write(prompt_list + "\n")
                     negf.write(str(reltoid) + "\n")
                     negf.write("Prediction: " + str(preds[-1]) + "\n")
@@ -619,7 +617,7 @@ def run(reltoid, idtoprompt, store_path, args):
                     negf.write("\n-----------------\n")
 
 
-            with open("{}/results.txt".format(store_path),"a") as negf:
+            with open("{}/results.txt".format(store_path),"w") as negf:
                 negf.write(prompt_list + "\n")
                     
                 negf.write(str(reltoid) + "\n")

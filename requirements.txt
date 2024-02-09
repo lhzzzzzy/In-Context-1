@@ -1,4 +1,4 @@
-numpy
+numpy==1.19.5
 rouge_score
 fire
 openai
@@ -7,3 +7,6 @@ torch
 sentencepiece
 tokenizers>=0.13.3
 wandb
+sklearn
+pandas==1.3.0
+simcse

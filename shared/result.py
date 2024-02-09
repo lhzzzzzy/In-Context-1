@@ -2,7 +2,7 @@ import json
 import argparse
 import sys
 import math
-from gpt3_api import Demo
+from LLM_API import LLMApi
 import random
 import numpy as np
 from testeval import compute_f1
