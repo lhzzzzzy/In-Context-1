@@ -1,7 +1,7 @@
 python3 relation_extraction.py \
     --task ace05 \
     --model text-davinci-003 \
-    --num_test 1 \
+    --num_test 5 \
     --example_dataset "./dataset/ace05/train.json" \
     --test_dataset "./dataset/ace05/test.json" \
     --fixed_example 0\
@@ -12,7 +12,7 @@ python3 relation_extraction.py \
     --num_run 1 \
     --seed 0 \
     --random_label 0 \
-    --reasoning 0 \
+    --reasoning 1 \
     --use_knn 1 \
     --k 10 \
     --var 0 \

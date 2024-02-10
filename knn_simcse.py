@@ -28,7 +28,10 @@ def find_knn_example(model, test_dict, train_dict, k, entity_info):
         
     test_id = test_dict["doc_key"]
     label_other = 0
-    knn_result = model.search(test_sentences, device="cpu", threshold=0.0, top_k=k)
+    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    print("begin searching")
+    print("------------------------------------------------------------------------------------------\n")
+    knn_result = model.search(test_sentences, device="cuda", threshold=0.0, top_k=k)
     knn_list = [train_dict[x[0]] for x in knn_result]
     
     return knn_list

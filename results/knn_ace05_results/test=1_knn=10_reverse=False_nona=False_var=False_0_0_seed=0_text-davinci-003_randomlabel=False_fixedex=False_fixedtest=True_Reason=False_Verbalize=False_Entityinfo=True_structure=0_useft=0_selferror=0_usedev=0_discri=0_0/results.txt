@@ -1,0 +1,47 @@
+I'm a knowledgeable person. I will solve the relation extraction (RE) task. Given the context, I'll first consider whether the most precise relation between two entities belongs to the following six possible relations. If yes, I will output the most precise relation, otherwise I will output NONE.
+
+PHYSICAL: located, near
+GENERAL AND AFFILIATION: citizen, resident, religion, ethnicity, organization location
+PERSON AND SOCIAL: business,family,lasting personal
+ORGANIZATION AND AFFILIATION: employment,founder,ownership,student alumn,sports affiliation,investor shareholder,membership
+PART AND WHOLE: artifact,geographical,subsidiary
+AGENT AND ARTIFACT: user, owner, inventor, manufacturer
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between US and NKorea is NONE.
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between NKorea and US is NONE.
+
+Context: WASHINGTON , April 28 ( AFP ) - North Korea has offered to scrap its nuclear weapons and missile programs , but only in return for " considerable " diplomatic , political and economic concessions , the United States said Monday .
+Given the context, the relation between WASHINGTON and AFP is NONE.
+
+Context: WASHINGTON , April 28 ( AFP ) - North Korea has offered to scrap its nuclear weapons and missile programs , but only in return for " considerable " diplomatic , political and economic concessions , the United States said Monday .
+Given the context, the relation between United States and AFP is NONE.
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between US and missile is NONE.
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between US and nuke is NONE.
+
+Context: WASHINGTON , April 28 ( AFP ) - North Korea has offered to scrap its nuclear weapons and missile programs , but only in return for " considerable " diplomatic , political and economic concessions , the United States said Monday .
+Given the context, the relation between WASHINGTON and United States is NONE.
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between missile and US is NONE.
+
+Context: WASHINGTON , April 28 ( AFP ) - North Korea has offered to scrap its nuclear weapons and missile programs , but only in return for " considerable " diplomatic , political and economic concessions , the United States said Monday .
+Given the context, the relation between United States and WASHINGTON is NONE.
+
+Context: NKorea offers to scrap nuke , missile programs but wants big concessions : US
+Given the context, the relation between nuke and US is NONE.
+
+Context: Senator Bumpers , of the 22 senators of the old confederacy , when I got to Washington with the Associated Press , 45 years ago , 22 of them were Democrats , nine were Republicans .
+Given the context, the relation between Washington and them is
+{'NONE': 0, 'PHYS': 1, 'GEN-AFF': 2, 'PER-SOC': 3, 'ORG-AFF': 4, 'PART-WHOLE': 5, 'ART': 6}
+Prediction: 6
+Gold: 0
+{'precision': 0.0, 'recall': 0.0, 'f1': 0.0}
+1667oftrain
+-----------------
