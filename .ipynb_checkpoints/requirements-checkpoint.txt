@@ -10,3 +10,4 @@ wandb
 sklearn
 pandas==1.3.0
 simcse
+faiss-gpu

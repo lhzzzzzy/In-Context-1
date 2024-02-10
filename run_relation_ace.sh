@@ -12,7 +12,7 @@ python3 relation_extraction.py \
     --num_run 1 \
     --seed 0 \
     --random_label 0 \
-    --reasoning 1 \
+    --reasoning 0 \
     --use_knn 1 \
     --k 10 \
     --var 0 \

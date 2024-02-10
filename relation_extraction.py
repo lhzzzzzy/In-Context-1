@@ -58,7 +58,7 @@ def run(reltoid, idtoprompt, store_path, args):
     print("train_sentences cutted")
     print("------------------------------------------------------------------------------------------\n\n\n")
 
-    knn_model.build_index(train_sentences, device="cuda")
+    knn_model.build_index(train_sentences, device="cpu")
 
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print("len of test_exp = {}".format(len(test_examples)))
