@@ -59,7 +59,6 @@ def generate_label(dataset, relation_dict):
 
 def generate_query(h_type, t_type, relation_list, query_dict):
     query_list = []
-    #print(query_dict)
     for rel in relation_list:
         if rel == "None":
             continue
@@ -106,21 +105,10 @@ def get_test_example(example_path, reltoid):
      
 
 def auto_generate_example(example_dict, reltoid, idtoprompt, num_per_rel, num_na, random_label, reasoning, llm):
-    #ratio = 0.5
-    #num_per_rel = 4
     num_example = num_per_rel * (len(example_dict.keys()) - 1) + num_na
 
 
-    #select_dict = {"0":0, "A":1,"B":2,"C":3,"D":4,"E":5,"F":6}
-    #reltoalpha = {0:"0", 1:"A", 2:"B", 3:"C", 4:"D", 5:"E", 6:"F"}
-    #reltoalpha = {0:"NONE", 1:"Physical", 2:"General and affiliation", 3:"Person and social", 4:"Organization and affiliation", 5:"Part and whole", 6:"Agent and artifact"}
-    #reltoalpha = {0:"NONE", 1:"PHYSICAL", 2:"GENERAL AND AFFILIATION", 3:"PERSON AND SOCIAL", 4:"ORGANIZATION AND AFFILIATION", 5:"PART AND WHOLE", 6:"AGENT AND ARTIFACT"}
-           #else:
-            #    if random.random() > 0.9:
-            #        example_list.append(tmp_dict)
-            #    else:
-            #        continue
-    #examples = [item for k,v in example_dict.items() for item in v]
+
     examples = []
     for relid in example_dict.keys():
         if relid == 0:
@@ -130,9 +118,7 @@ def auto_generate_example(example_dict, reltoid, idtoprompt, num_per_rel, num_na
             
 
     flat_examples = [item for sublist in examples for item in sublist]
-    #print(len(examples))
     example_list = random.sample(flat_examples, num_example)
-    #assert False
     
     example_prompt = str()
     for tmp_dict in example_list:
@@ -160,16 +146,12 @@ def auto_generate_example(example_dict, reltoid, idtoprompt, num_per_rel, num_na
         if not reasoning:
             prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ".\n"
         else:
-            #tmp_query = "\nGiven the sentence: \"" + string + "\", What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + "?"
             tmp_query = "What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + " in the sentence \"" + string + "\"?"
             prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ". It is because:"
-            #print(prompt_query)
-            #assert False
 
             results = llm.process_inputs(tmp_query)
             prompt_query = prompt_query + results[0] +"\n"
-            #print(prompt_query)
-            #assert False
+        
         example_prompt += prompt_query
     return example_prompt
 
@@ -178,7 +160,6 @@ def auto_generate_example(example_dict, reltoid, idtoprompt, num_per_rel, num_na
 def find_prob(target, result, probs):
     try:
         index = [x.strip() for x in probs["tokens"]].index(str(target))
-        #print(probs["token_logprobs"][index])
         return math.exp(probs["token_logprobs"][index])
     except:
         len_target = len(target)
@@ -186,24 +167,18 @@ def find_prob(target, result, probs):
             for j in range(len(probs["tokens"])):
                 if i + j > len(probs["tokens"]):
                     continue
-                #print(j+i)
-                #print(len(probs["tokens"]))
+             
                 tmp_word = "".join([probs["tokens"][x] for x in range(j, j+i)])
                 if tmp_word.strip() != target:
-                    #print(tmp_word.strip())
                     continue
                 else:
-                    #print(tmp_word.strip())
 
                     start = j
                     end = j + i
                     sum_prob = 0
                     for k in range(start, end):
                         sum_prob += math.exp(probs["token_logprobs"][k])
-                        #print(sum_prob)
-                    #if sum_prob == None:
-                        #print(target)
-                        #print(result)
+                  
                     return sum_prob / i
         return 0.0
 def smooth(x):
@@ -273,14 +248,11 @@ def generate_ft_example(tmp_dict, ft_dict, reltoid, idtoprompt, demo, args):
                 prompt_query = tmp_example.prompt + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
                 prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ".\n"
-            #prompt_query = instance(tmp_dict).reference + " is " + idtoprompt[reltoid[rel]] + ".\n\n"
         elif args.self_error:
             prompt_query = tmp_example.get_self_error(tmp_dict, demo, reltoid, idtoprompt, args)
         else:
-            #tmp_query = "\nGiven the sentence: \"" + string + "\", What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + "?"
             tmp_query = "What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + " in the sentence \"" + string + "\"?"
-            #print(prompt_query)
-            #assert False
+        
 
             while(True):
                 try:
@@ -288,23 +260,18 @@ def generate_ft_example(tmp_dict, ft_dict, reltoid, idtoprompt, demo, args):
                     break
                 except:
                     continue
-            #prompt_query = prompt_query + results[0] +"\n"
             if args.structure:
                 prompt_query = tmp_example.prompt + tmp_example.clue + results[0] + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
                 prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ". It is because:\n" + results[0] + "\n"
-            #print(prompt_query)
-            #assert False
+     
         example_prompt += prompt_query
     return example_prompt, tmp_knn, label_other, example_list
 
 
 
 def generate_lm_example(gpu_index_flat, tmp_dict, train_dict, train_sentences, k, reltoid, idtoprompt, num_per_rel, num_na, random_label, reasoning, demo, var, args):
-    #train_list = [x for y in train_dict.values() for x in y]
-    #print(tmp_dict)
-    #assert False
-    #print(len(train_list))
+
     example_list = find_lmknn_example(gpu_index_flat, tmp_dict,train_dict,train_sentences, k)
     
     if args.reverse:
@@ -349,12 +316,8 @@ def generate_lm_example(gpu_index_flat, tmp_dict, train_dict, train_sentences, k
                 prompt_query = tmp_example.prompt + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
                 prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ".\n"
-            #prompt_query = instance(tmp_dict).reference + " is " + idtoprompt[reltoid[rel]] + ".\n\n"
         else:
-            #tmp_query = "\nGiven the sentence: \"" + string + "\", What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + "?"
             tmp_query = "What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + " in the sentence \"" + string + "\"?"
-            #print(prompt_query)
-            #assert False
 
             while(True):
                 try:
@@ -362,23 +325,17 @@ def generate_lm_example(gpu_index_flat, tmp_dict, train_dict, train_sentences, k
                     break
                 except:
                     continue
-            #prompt_query = prompt_query + results[0] +"\n"
             if args.structure:
                 prompt_query = tmp_example.prompt + tmp_example.clue + results[0] + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
                 prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ". It is because:\n" + results[0] + "\n"
-            #print(prompt_query)
-            #assert False
         example_prompt += prompt_query
     return example_prompt, tmp_knn, label_other, example_list
 
 
 
 def generate_knn_example(knn_model, tmp_dict, train_dict, k, reltoid, idtoprompt, num_per_rel, num_na, random_label, reasoning, llm, var, args):
-    #train_list = [x for y in train_dict.values() for x in y]
-    #print(tmp_dict)
-    #assert False
-    #print(len(train_list))
+    
     example_list = find_knn_example(knn_model, tmp_dict,train_dict,k, args.entity_info)
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     print("finish find_knn_example")
@@ -412,6 +369,7 @@ def generate_knn_example(knn_model, tmp_dict, train_dict, k, reltoid, idtoprompt
         entity2 = " ".join(tmp_dict["sentences"][0][obj_head:obj_tail])
         entity2_type = tmp_dict["ner"][0][1][2]
 
+
         if random_label:
             rel = random.choice([x for x in reltoid.keys()])
         elif tmp_dict["relations"] == [[]]:
@@ -426,20 +384,16 @@ def generate_knn_example(knn_model, tmp_dict, train_dict, k, reltoid, idtoprompt
                 prompt_query = tmp_example.prompt + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
                 prompt_query = "\nContext: " + string + "\n" + "Given the context, the relation between " + entity1 + " and " + entity2 + " is " + idtoprompt[reltoid[rel]] + ".\n"
-            #prompt_query = instance(tmp_dict).reference + " is " + idtoprompt[reltoid[rel]] + ".\n\n"
         else:
-            #tmp_query = "\nGiven the sentence: \"" + string + "\", What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + "?"
             tmp_query = "What are the clues that lead the relation between \"" + entity1 + "\" and \"" + entity2 + "\" to be " + idtoprompt[reltoid[rel]] + " in the sentence \"" + string + "\"?"
-            #print(prompt_query)
-            #assert False
-
+            
             while(True):
                 try:
-                    results = llm.process_input(tmp_query)
+                    # remeber the input is a list
+                    results = llm.process_inputs([tmp_query])
                     break
                 except:
                     continue
-            #prompt_query = prompt_query + results[0] +"\n"
             if args.structure:
                 prompt_query = tmp_example.prompt + tmp_example.clue + results[0] + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
             else:
@@ -450,8 +404,6 @@ def generate_knn_example(knn_model, tmp_dict, train_dict, k, reltoid, idtoprompt
             print(prompt_query)
             print("-----------------------------------------------------------------------------------\n\n\n")
 
-            #print(prompt_query)
-            #assert False
         example_prompt += prompt_query
     return example_prompt, tmp_knn, label_other, example_list
 
@@ -488,8 +440,6 @@ def generate_ft_dict(args):
             num_id += 1
     knn_ft_dict = {}
     for key in knn_dict.keys():
-        #print(knn_dict[key])
-        #print(train_dict)
         knn_ft_dict[key] = [train_dict[int(x)] for x in knn_dict[key]]
     return knn_ft_dict
 
@@ -514,9 +464,7 @@ def get_binary_select(pred, tmp_dict, llm, knn_list, reltoid, idtoprompt, args):
         except:
             continue
     
-    #print(prompt_list)
     print(results[0])
-    #assert False
     if "no" in results[0]:
         pred = 0
     return pred #, math.exp(probs[0]["token_logprobs"][0])

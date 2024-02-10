@@ -390,10 +390,9 @@ def generate_knn_example(knn_model, tmp_dict, train_dict, k, reltoid, idtoprompt
             while(True):
                 try:
                     # remeber the input is a list
-                    results = llm.process_input([tmp_query])
+                    results = llm.process_inputs([tmp_query])
                     break
                 except:
-                    print("something wrong!")
                     continue
             if args.structure:
                 prompt_query = tmp_example.prompt + tmp_example.clue + results[0] + tmp_example.pred + idtoprompt[reltoid[rel]] + "\n"
