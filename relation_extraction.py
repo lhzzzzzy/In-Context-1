@@ -52,15 +52,6 @@ def run(reltoid, idtoprompt, store_path, args):
         train_sentences = [instance(x).sentence for x in train_list]
 
     knn_model = SimCSE("princeton-nlp/sup-simcse-roberta-large")
-<<<<<<< HEAD
-=======
-    # for debugging beg
-    
-    train_sentences = train_sentences[:20]
-
-    # for debugging end
-    knn_model.build_index(train_sentences, device="cuda")
->>>>>>> 2169faa5ad1b159cbda03df1ee12ae274853a555
 
     train_sentences = train_sentences[:50]
     print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
