@@ -1,8 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 from typing import List
-import torch
-from torch.cuda.amp import autocast
-import os
+import deepspeed
+
 
 class LLMApi:
     def __init__(self, model_name = "wxjiao/alpaca-7b"):
@@ -10,19 +9,13 @@ class LLMApi:
         self.tokenizer = None
         self.model = None
         self.generation_config = None
-        # self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.device = "cpu"
     
     def load_model_and_config(self, temperature = 1.0, max_new_tokens = 200, do_sample = False, num_beams = 2, no_repeat_ngram_size = 2):
         try:
-            os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'max_split_size_mb:128'
-            torch.cuda.set_per_process_memory_fraction(0.98, 0)
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            # self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, padding_side="left")
-            # self.tokenizer.pad_token = self.tokenizer.eos_token
-            self.model = AutoModelForCausalLM.from_pretrained(self.model_name)
-            self.model.to(self.device)  # Move model to CUDA if available
-            #self.model.half()  # Convert model to half precision
+            self.model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = "auto") # I can use the model in multiple GPUs
+            for param in self.model.parameters():
+                print(param.device)
             self.generation_config = GenerationConfig(
                                         temperature = temperature,
                                         max_new_tokens = max_new_tokens,
@@ -48,4 +41,6 @@ class LLMApi:
 if __name__ == "__main__":
     model = LLMApi()
     model.load_model_and_config()
-    print(model.process_inputs(["hi, my name is hz liang, what's your name?"]))
+    # this model don't have padding tokens. can't run below's code.
+    print(model.process_inputs(["hi, my name is hz liang, what's your name?", "which city is the capital of China? (a) Beijing (b) bilibili (c) youtube"]))
+    
