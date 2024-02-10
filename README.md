@@ -1,0 +1,2 @@
+- Be able to use multiple GPUs for inference
+- The model does not utilize padding tokens.
